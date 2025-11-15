@@ -3,16 +3,11 @@ import { Campaign, CampaignStats, ClusterStat, ApiResponse } from '@/types'
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 class ApiClient {
-  private async request<T>(endpoint: string, apiKey: string): Promise<T> {
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      headers: {
-        'X-WB-API-Key': apiKey,
-        'Content-Type': 'application/json',
-      },
-    })
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const response = await fetch(`${API_URL}${endpoint}`, options)
 
     if (!response.ok) {
-      const error = await response.json()
+      const error = await response.json().catch(() => ({ message: 'API request failed' }))
       throw new Error(error.message || 'API request failed')
     }
 
@@ -26,15 +21,26 @@ class ApiClient {
 
   async validateApiKey(apiKey: string): Promise<boolean> {
     try {
-      await this.request<any>('/api/validate-key', apiKey)
-      return true
+      const response = await fetch(`${API_URL}/api/test-key`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ apiKey }),
+      })
+      const data = await response.json()
+      return data.success
     } catch {
       return false
     }
   }
 
   async getCampaigns(apiKey: string): Promise<Campaign[]> {
-    return this.request<Campaign[]>('/api/campaigns', apiKey)
+    return this.request<Campaign[]>('/api/campaigns', {
+      headers: {
+        'x-api-key': apiKey,
+      },
+    })
   }
 
   async getCampaignStats(
@@ -44,28 +50,40 @@ class ApiClient {
     endDate: string
   ): Promise<CampaignStats[]> {
     const params = new URLSearchParams({
-      startDate,
-      endDate,
+      beginDate: startDate,
+      endDate: endDate,
     })
     return this.request<CampaignStats[]>(
-      `/api/campaigns/${campaignId}/stats?${params}`,
-      apiKey
+      `/api/campaign/${campaignId}/stats?${params}`,
+      {
+        headers: {
+          'x-api-key': apiKey,
+        },
+      }
     )
   }
 
   async getClustersStats(
     apiKey: string,
     campaignId: number,
+    nmId: number,
     startDate: string,
     endDate: string
   ): Promise<ClusterStat[]> {
-    const params = new URLSearchParams({
-      startDate,
-      endDate,
-    })
     return this.request<ClusterStat[]>(
-      `/api/campaigns/${campaignId}/clusters?${params}`,
-      apiKey
+      `/api/campaign/${campaignId}/clusters`,
+      {
+        method: 'POST',
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nm_id: nmId,
+          from: startDate,
+          to: endDate,
+        }),
+      }
     )
   }
 }

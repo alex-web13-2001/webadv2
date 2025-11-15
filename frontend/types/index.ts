@@ -1,10 +1,9 @@
 export interface Campaign {
-  campaignId: number;
+  advertId: number;
   name: string;
   type: number;
   status: number;
-  dailyBudget: number;
-  advertId: number;
+  createTime: string;
 }
 
 export interface CampaignStats {
@@ -13,27 +12,21 @@ export interface CampaignStats {
   clicks: number;
   ctr: number;
   cpc: number;
+  cpm: number;
   sum: number;
-  atbs: number;
   orders: number;
-  cr: number;
-  shks: number;
-  sum_price: number;
 }
 
 export interface ClusterStat {
-  cluster: string;
-  count: number;
-  views: number;
+  norm_query: string;
+  avg_pos: number;
   clicks: number;
+  views: number;
   ctr: number;
   cpc: number;
+  cpm: number;
   sum: number;
-  addToCartCount: number;
-  ordersCount: number;
-  ordersSumRub: number;
-  buyoutsCount: number;
-  buyoutsSumRub: number;
+  orders: number;
 }
 
 export interface ApiResponse<T> {

@@ -47,9 +47,8 @@ export default function StatsOverview({ apiKey, campaignId }: StatsOverviewProps
         clicks: acc.clicks + stat.clicks,
         sum: acc.sum + stat.sum,
         orders: acc.orders + stat.orders,
-        sum_price: acc.sum_price + stat.sum_price,
       }),
-      { views: 0, clicks: 0, sum: 0, orders: 0, sum_price: 0 }
+      { views: 0, clicks: 0, sum: 0, orders: 0 }
     )
   }
 
@@ -72,7 +71,7 @@ export default function StatsOverview({ apiKey, campaignId }: StatsOverviewProps
   const totals = calculateTotals()
   const avgCTR = totals.views > 0 ? (totals.clicks / totals.views) * 100 : 0
   const avgCPC = totals.clicks > 0 ? totals.sum / totals.clicks : 0
-  const roi = totals.sum > 0 ? ((totals.sum_price - totals.sum) / totals.sum) * 100 : 0
+  const avgCPM = totals.views > 0 ? (totals.sum / totals.views) * 1000 : 0
 
   return (
     <div className="space-y-6">
@@ -110,9 +109,8 @@ export default function StatsOverview({ apiKey, campaignId }: StatsOverviewProps
             value={formatNumber(totals.orders, 0)}
           />
           <MetricCard
-            title="ROI"
-            value={`${formatNumber(roi, 2)}%`}
-            change={roi}
+            title="Средний CPM"
+            value={formatCurrency(avgCPM)}
           />
         </div>
       </div>

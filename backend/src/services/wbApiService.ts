@@ -64,6 +64,17 @@ export class WBApiService {
           endDate,
         },
       });
+      
+      // WB API returns an array with campaign objects
+      // Each campaign object has a 'days' array with daily stats
+      const campaignData = response.data;
+      
+      // For MVP, we return the first campaign's days array
+      // or the whole response if it's already in the right format
+      if (Array.isArray(campaignData) && campaignData.length > 0 && campaignData[0].days) {
+        return { success: true, data: campaignData[0].days };
+      }
+      
       return { success: true, data: response.data };
     } catch (error) {
       return this.handleError(error);

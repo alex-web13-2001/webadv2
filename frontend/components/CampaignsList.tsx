@@ -32,7 +32,7 @@ export default function CampaignsList({ apiKey, onSelectCampaign }: CampaignsLis
   }
 
   const handleSelect = (campaign: Campaign) => {
-    setSelectedId(campaign.campaignId)
+    setSelectedId(campaign.advertId)
     onSelectCampaign(campaign)
   }
 
@@ -60,10 +60,10 @@ export default function CampaignsList({ apiKey, onSelectCampaign }: CampaignsLis
       <div className="space-y-2">
         {campaigns.map((campaign) => (
           <button
-            key={campaign.campaignId}
+            key={campaign.advertId}
             onClick={() => handleSelect(campaign)}
             className={`w-full text-left p-4 rounded-lg border-2 transition ${
-              selectedId === campaign.campaignId
+              selectedId === campaign.advertId
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
                 : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
             }`}
@@ -72,7 +72,7 @@ export default function CampaignsList({ apiKey, onSelectCampaign }: CampaignsLis
               <div>
                 <h3 className="font-semibold text-gray-800 dark:text-white">{campaign.name}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  ID: {campaign.campaignId} | Бюджет: {campaign.dailyBudget} ₽
+                  ID: {campaign.advertId} | Создано: {new Date(campaign.createTime).toLocaleDateString('ru-RU')}
                 </p>
               </div>
               <div className={`px-3 py-1 rounded-full text-xs font-medium ${
