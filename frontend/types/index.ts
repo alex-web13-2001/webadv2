@@ -1,10 +1,9 @@
 export interface Campaign {
-  campaignId: number;
+  advertId: number;
   name: string;
   type: number;
   status: number;
-  dailyBudget: number;
-  advertId: number;
+  createTime: string;
 }
 
 export interface CampaignStats {

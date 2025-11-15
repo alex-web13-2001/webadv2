@@ -40,12 +40,12 @@ export default function Home() {
               <>
                 <StatsOverview 
                   apiKey={apiKey}
-                  campaignId={selectedCampaign.campaignId}
+                  campaignId={selectedCampaign.advertId}
                 />
                 
                 <ClustersAnalytics 
                   apiKey={apiKey}
-                  campaignId={selectedCampaign.campaignId}
+                  campaignId={selectedCampaign.advertId}
                 />
               </>
             )}
